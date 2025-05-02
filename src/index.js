@@ -5,15 +5,17 @@ const app = express();
 
 //Routes
 const tarefaRoutes = require('./routes/tarefaRoutes');
+const crudTarefaRoutes = require('./routes/crudTarefaRoutes');
 
 app.use(express.json());
 const port = process.env.PORT;
 
-app.get('/', (req, res) => {
-    res.send('API de Gerenciamento de Tarefas está rodando 🚀');
-});
-
 app.use(tarefaRoutes);
+app.use(crudTarefaRoutes);
+
+app.get('/', (req, res) => {
+    res.redirect('/tarefas');
+});
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);

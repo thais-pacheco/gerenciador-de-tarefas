@@ -24,6 +24,5 @@ const criarTarefa = async (req, res) => {
 };
 
 module.exports = {
-  listarTarefas,
   criarTarefa,
 };
