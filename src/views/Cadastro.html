@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Cadastro de Usuário</h1>
+
+  <form id="cadastroForm">
+    <input type="text" id="nome" placeholder="Nome" required><br>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="senha" placeholder="Senha" required><br>
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <p id="mensagem"></p>
+
+  <!-- Link para página de login -->
+  <p>Já tem uma conta? <a href="login.html">Clique aqui para fazer login</a></p>
+
+  <script>
+    document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const mensagemElement = document.getElementById('mensagem');
+
+      try {
+        const res = await fetch('http://localhost:3000/auth/cadastrar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, senha })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          mensagemElement.style.color = 'green';
+          mensagemElement.innerText = data.mensagem || 'Cadastro realizado com sucesso!';
+
+          // Aguarda 2 segundos e redireciona
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 2000);
+        } else {
+          mensagemElement.style.color = 'red';
+          mensagemElement.innerText = data.erro || 'Erro ao cadastrar';
+        }
+      } catch (err) {
+        mensagemElement.style.color = 'red';
+        mensagemElement.innerText = 'Erro ao conectar com o servidor.';
+      }
+    });
+  </script>
+</body>
+</html>

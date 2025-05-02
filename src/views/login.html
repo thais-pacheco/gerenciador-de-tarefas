@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Login</h1>
+
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="senha" placeholder="Senha" required><br>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <p>Não tem uma conta? <a href="./cadastro.html">Cadastre-se aqui</a></p>
+  <p id="mensagem"></p>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const mensagemElement = document.getElementById('mensagem');
+
+      try {
+        const res = await fetch('http://localhost:3000/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          localStorage.setItem('token', data.token);
+          mensagemElement.style.color = 'green';
+          mensagemElement.innerText = 'Login bem-sucedido! Redirecionando...';
+
+          // Redirecionar para a página principal (ajuste conforme sua rota)
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          mensagemElement.style.color = 'red';
+          mensagemElement.innerText = data.erro || 'Erro ao fazer login';
+        }
+      } catch (err) {
+        mensagemElement.style.color = 'red';
+        mensagemElement.innerText = 'Erro ao conectar com o servidor';
+      }
+    });
+  </script>
+</body>
+</html>
