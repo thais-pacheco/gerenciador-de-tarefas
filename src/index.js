@@ -8,7 +8,9 @@ const cors = require('cors');
 
 //Routes
 const tarefaRoutes = require('./routes/tarefaRoutes');
-const crudTarefaRoutes = require('./routes/crudTarefaRoutes');
+const criarTarefaRoutes = require('./routes/criarTarefaRoutes');
+const excluirTarefaRoutes = require('./routes/excluirTarefaRoutes');
+const editarTarefaRoutes = require('./routes/editarTarefaRoutes');
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
@@ -26,7 +28,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public'))); // Arquivos estáticos (CSS, imagens, etc.)
 
 app.use(tarefaRoutes);
-app.use(crudTarefaRoutes);
+app.use(criarTarefaRoutes);
+app.use(excluirTarefaRoutes);
+app.use(editarTarefaRoutes);
 app.use(authRoutes);
 
 app.get('/', (req, res) => {

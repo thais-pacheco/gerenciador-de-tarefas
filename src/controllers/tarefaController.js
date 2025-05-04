@@ -1,26 +1,28 @@
 const Tarefa = require('../models/tarefaModel');
 const Status = require('../models/statusModel');
 
-const listarTarefas = async (req, res) => {
-  try {
-    const tarefasSequelize = await Tarefa.findAll({
-      include: {
-        model: Status,
-        as: 'status',
-      },
-    });
-
-    const tarefas = tarefasSequelize.map(tarefa => tarefa.get({ plain: true }));
+const listarTarefas = (req, res) => {
+  Tarefa.findAll({
+    include: {
+      model: Status,
+      as: 'status',
+    },
+    order: [['id', 'DESC']]
+  })
+  .then(tarefas => {
+    const tarefasPlanas = tarefas.map(t => t.get({ plain: true }));
+    console.log(tarefasPlanas);
 
     res.render('tarefas/listarTarefas', {
       layout: 'main',
-      tarefas,
-      total: tarefas.length
+      tarefas: tarefasPlanas,
+      total: tarefasPlanas.length
     });
-  } catch (error) {
-    console.error('Erro ao buscar tarefas:', error);
+  })
+  .catch(erro => {
+    console.error('Erro ao buscar tarefas:', erro);
     res.status(500).send('Erro ao buscar tarefas');
-  }
+  });
 };
 
 module.exports = {

@@ -3,7 +3,7 @@ const Status = require('../models/statusModel');
 
 const criarTarefa = async (req, res) => {
   try {
-    const { nome, descricao, status_id } = req.body;
+    const { nome, descricao, status_id, usuario_id } = req.body;
 
     const statusExiste = await Status.findByPk(status_id);
     if (!statusExiste) {
@@ -14,6 +14,7 @@ const criarTarefa = async (req, res) => {
       nome,
       descricao,
       status_id,
+      usuario_id
     });
 
     res.status(201).json({ mensagem: 'Tarefa criada com sucesso!', tarefa: novaTarefa });
