@@ -1,0 +1,24 @@
+<h3>Criar tarefa</h3>
+
+<form action="/tarefas/send" method="POST">
+    <div class="mb-3">
+        <input type="text" name="nome" class="form-control" maxlength="100" placeholder="Nome da tarefa" required
+            value="{{nome}}">
+    </div>
+
+    <div class="mb-3">
+        <textarea name="descricao" class="form-control" maxlength="255"
+            placeholder="Descrição da tarefa">{{descricao}}</textarea>
+    </div>
+
+    <div class="text-center">
+        <a href="/tarefas" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Criar</button>
+    </div>
+
+    <input type="hidden" name="usuario_id" value="{{userId}}">
+</form>
+
+{{#if erro}}
+<div class="alert alert-danger mt-3">{{erro}}</div>
+{{/if}}

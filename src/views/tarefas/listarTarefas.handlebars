@@ -1,12 +1,12 @@
 <!-- Cabeçalho -->
 <div class="row align-items-center mb-4">
   <div class="col-12 col-md-6 d-flex align-items-center mb-3 mb-md-0">
-    <img src="/images/task-manager-icon-31.png" alt="logo" class="img-fluid me-2" width="48" />
+    <img src="/images/logo.png" alt="logo" class="img-fluid me-2" width="48" />
     <h1 class="h5 mb-0">Lista de Tarefas</h1>
   </div>
   <div class="col-12 col-md-6 text-md-end">
     <div class="d-flex flex-column flex-sm-row justify-content-md-end gap-2">
-      <a href="/tarefas/criar" class="btn btn-primary d-flex align-items-center justify-content-center">
+      <a href="/tarefas/adicionar" class="btn btn-primary d-flex align-items-center justify-content-center">
         <i class="bi bi-plus me-1"></i> Nova tarefa
       </a>
     </div>
@@ -108,22 +108,25 @@
       if (data.mensagem) {
         msgDiv.textContent = data.mensagem;
         msgDiv.className = "alert alert-success";
-        const tarefaEl = document.getElementById(`tarefa-${idTarefaParaExcluir}`);
-        if (tarefaEl) tarefaEl.remove();
+
+        // Fecha o modal
+        const modalEl = document.getElementById('modalConfirmacao');
+        bootstrap.Modal.getInstance(modalEl).hide();
+        idTarefaParaExcluir = null;
+
+        // Mostra mensagem de sucesso e recarrega a página após um tempo
+        msgDiv.style.display = "block";
+
+        setTimeout(() => {
+          location.reload(); // Recarrega a página para atualizar a contagem
+        }, 1000);
+
       } else {
         msgDiv.textContent = data.erro || "Erro ao excluir.";
         msgDiv.className = "alert alert-danger";
+        msgDiv.style.display = "block";
       }
 
-      msgDiv.style.display = "block";
-
-      setTimeout(() => {
-        msgDiv.style.display = "none";
-      }, 4000);
-
-      const modalEl = document.getElementById('modalConfirmacao');
-      bootstrap.Modal.getInstance(modalEl).hide();
-      idTarefaParaExcluir = null;
     })
     .catch(err => {
       const msgDiv = document.getElementById("mensagem-status");

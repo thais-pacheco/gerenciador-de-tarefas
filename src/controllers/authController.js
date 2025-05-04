@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuarioModel');
 
 // Cadastro
@@ -13,7 +12,7 @@ const cadastrarUsuario = async (req, res) => {
     const senhaHash = await bcrypt.hash(senha, 10);
     const novoUsuario = await Usuario.create({ nome, email, senha: senhaHash });
 
-    // res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', usuario: novoUsuario });
+    // Redireciona para a página de login após cadastro
     res.redirect('/login');
   } catch (error) {
     res.status(500).json({ erro: 'Erro ao cadastrar usuário', detalhes: error.message });
@@ -31,12 +30,24 @@ const loginUsuario = async (req, res) => {
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) return res.status(401).json({ erro: 'Senha incorreta' });
 
-    const token = jwt.sign({ id: usuario.id }, 'seu_segredo_jwt', { expiresIn: '1h' });
-    //res.status(200).json({ mensagem: 'Login bem-sucedido', token });
-    res.redirect('/tarefas');
+    // Estabelece a sessão com o usuário logado
+    req.session.usuarioId = usuario.id;
+    req.session.usuarioNome = usuario.nome;
+
+    res.redirect('/tarefas'); // Redireciona após o login
   } catch (error) {
     res.status(500).json({ erro: 'Erro no login', detalhes: error.message });
   }
 };
 
-module.exports = { cadastrarUsuario, loginUsuario };
+// Logout
+const logoutUsuario = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ erro: 'Erro ao encerrar sessão' });
+    }
+    res.redirect('/login'); // Redireciona para o login após o logout
+  });
+};
+
+module.exports = { cadastrarUsuario, loginUsuario, logoutUsuario };

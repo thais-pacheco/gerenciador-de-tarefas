@@ -1,0 +1,51 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6">
+      {{!-- <img src="/img/banner-medi-edit.png"> --}}
+    </div>
+    <div class="col-lg-6">
+      <form action="/tarefas/editar/{{edit.id}}" method="POST">
+        <input type="hidden" name="id" value="{{edit.id}}">
+
+        <div>
+          <input
+            type="text"
+            name="nome"
+            placeholder="Nome"
+            value="{{edit.nome}}"
+            required
+          >
+        </div>
+
+        <div>
+          <input
+            type="text"
+            name="descricao"
+            placeholder="Descrição"
+            value="{{edit.descricao}}"
+            required
+          >
+        </div>
+
+        <div>
+          <select name="status_id" required>
+            {{#each statusList}}
+              <option
+                value="{{this.id}}"
+                {{#if (eq this.id ../edit.status_id)}}selected{{/if}}
+              >
+                {{this.nome}}
+              </option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div>
+          <button type="submit" id="editar">
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

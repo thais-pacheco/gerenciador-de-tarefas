@@ -1,37 +1,54 @@
 const Tarefa = require('../models/tarefaModel');
 const Status = require('../models/statusModel');
 
-const editarTarefa = async (req, res) => {
-  const { id } = req.params;
-  const { nome, descricao, status_id } = req.body;
+function getEdicao(req, res) {
+  const tarefaId = req.params.id;
 
-  try {
-    // Verifica se a tarefa existe
-    const tarefa = await Tarefa.findByPk(id);
-    if (!tarefa) {
-      return res.status(404).json({ erro: 'Tarefa não encontrada.' });
-    }
-
-    // Valida o status_id, se fornecido
-    if (status_id) {
-      const statusExiste = await Status.findByPk(status_id);
-      if (!statusExiste) {
-        return res.status(400).json({ erro: 'Status informado não existe.' });
+  Promise.all([
+    Tarefa.findByPk(tarefaId),
+    Status.findAll()
+  ])
+    .then(([tarefa, statusList]) => {
+      if (!tarefa) {
+        return res.redirect('/tarefas');
       }
-    }
 
-    // Atualiza os campos fornecidos
-    tarefa.nome = nome || tarefa.nome;
-    tarefa.descricao = descricao || tarefa.descricao;
-    tarefa.status_id = status_id || tarefa.status_id;
+      res.render('tarefas/editarTarefas', {
+        edit: tarefa,
+        statusList
+      });
+    })
+    .catch((err) => {
+      res.send("Erro ao buscar tarefa: " + err);
+    });
+}
 
-    await tarefa.save();
+function editarTarefa(req, res) {
+  const tarefaId = req.params.id;
 
-    res.status(200).json({ mensagem: 'Tarefa atualizada com sucesso.', tarefa });
-  } catch (error) {
-    res.status(500).json({ erro: 'Erro ao atualizar tarefa.', detalhes: error.message });
-  }
+  Tarefa.findByPk(tarefaId)
+    .then((tarefa) => {
+      if (!tarefa) {
+        return res.redirect('/tarefas');
+      }
+
+      tarefa.nome = req.body.nome;
+      tarefa.descricao = req.body.descricao;
+      tarefa.status_id = req.body.status_id;
+
+      return tarefa.save();
+    })
+    .then(() => {
+      res.redirect('/tarefas');
+    })
+    .catch((err) => {
+      console.error('Erro ao atualizar tarefa:', err);
+      res.send('Erro ao atualizar: ' + err);
+    });
+}
+
+module.exports = {
+  getEdicao,
+  editarTarefa,
 };
-
-module.exports = editarTarefa;
 

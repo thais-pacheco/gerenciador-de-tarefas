@@ -1,16 +1,12 @@
-const jwt = require('jsonwebtoken');
-
 const autenticar = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ erro: 'Token não fornecido' });
-
-  try {
-    const decodificado = jwt.verify(token, 'seu_segredo_jwt');
-    req.usuarioId = decodificado.id;
-    next();
-  } catch (error) {
-    res.status(401).json({ erro: 'Token inválido ou expirado' });
+  // Verifica se o usuário está autenticado pela presença do usuarioId na sessão
+  if (!req.session.usuarioId) {
+    // Se não estiver autenticado, redireciona para o login
+    return res.redirect('/login'); // Ou pode retornar um erro: res.status(401).json({ erro: 'Usuário não autenticado' });
   }
+
+  // Se o usuário estiver autenticado, permite o acesso à próxima rota
+  next();
 };
 
 module.exports = autenticar;
