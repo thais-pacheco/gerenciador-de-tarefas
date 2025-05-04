@@ -1,7 +1,7 @@
 // src/models/usuarioModel.js
 
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/sequelize'); // Importa a instância do Sequelize
+const { sequelize } = require('../database/db'); // Importa a instância do Sequelize
 
 const Usuario = sequelize.define('Usuario', {
   nome: {

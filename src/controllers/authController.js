@@ -13,7 +13,8 @@ const cadastrarUsuario = async (req, res) => {
     const senhaHash = await bcrypt.hash(senha, 10);
     const novoUsuario = await Usuario.create({ nome, email, senha: senhaHash });
 
-    res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', usuario: novoUsuario });
+    // res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', usuario: novoUsuario });
+    res.redirect('/login');
   } catch (error) {
     res.status(500).json({ erro: 'Erro ao cadastrar usuário', detalhes: error.message });
   }
@@ -31,7 +32,8 @@ const loginUsuario = async (req, res) => {
     if (!senhaValida) return res.status(401).json({ erro: 'Senha incorreta' });
 
     const token = jwt.sign({ id: usuario.id }, 'seu_segredo_jwt', { expiresIn: '1h' });
-    res.status(200).json({ mensagem: 'Login bem-sucedido', token });
+    //res.status(200).json({ mensagem: 'Login bem-sucedido', token });
+    res.redirect('/tarefas');
   } catch (error) {
     res.status(500).json({ erro: 'Erro no login', detalhes: error.message });
   }

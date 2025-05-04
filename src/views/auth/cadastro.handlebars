@@ -1,0 +1,22 @@
+<div class="form-container">
+  <h2>Cadastro</h2>
+  <form action="/cadastrar" method="POST">
+    <div class="input-group">
+      <label for="nome">Nome</label>
+      <input type="text" name="nome" required />
+    </div>
+
+    <div class="input-group">
+      <label for="email">Email</label>
+      <input type="email" name="email" required />
+    </div>
+
+    <div class="input-group">
+      <label for="senha">Senha</label>
+      <input type="password" name="senha" required />
+    </div>
+
+    <button type="submit">Cadastrar</button>
+    <p class="link">Já tem uma conta? <a href="/login">Entrar</a></p>
+  </form>
+</div>

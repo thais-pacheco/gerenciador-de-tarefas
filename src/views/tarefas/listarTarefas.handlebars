@@ -1,0 +1,64 @@
+<!-- Cabeçalho -->
+<div class="row align-items-center mb-4">
+  <div class="col-12 col-md-6 d-flex align-items-center mb-3 mb-md-0">
+    <img src="/images/task-manager-icon-31.png" alt="logo" class="img-fluid me-2" width="48" />
+    <h1 class="h5 mb-0">Lista de Tarefas</h1>
+  </div>
+  <div class="col-12 col-md-6 text-md-end">
+    <div class="d-flex flex-column flex-sm-row justify-content-md-end gap-2">
+      <a href="/tarefas/criar" class="btn btn-primary d-flex align-items-center justify-content-center">
+        <i class="bi bi-plus me-1"></i> Nova tarefa
+      </a>
+    </div>
+  </div>
+  <hr class="mt-4" />
+</div>
+
+<!-- Lista de Tarefas -->
+{{#if tarefas.length}}
+{{#each tarefas}}
+<div class="row mb-3">
+  <div class="col-12 border border-secondary rounded p-3 shadow-sm">
+    <div class="row align-items-center gy-3">
+      <div class="col-12 col-md-7 d-flex align-items-center">
+        <i class="bi bi-arrow-right-circle-fill text-info fs-5 me-2"></i>
+        <h6 class="mb-0">{{descricao}}</h6>
+      </div>
+      <div class="col-12 col-md-3">
+        <span class="badge bg-secondary">{{status.nome}}</span>
+      </div>
+      <div class="col-12 col-md-2 d-flex justify-content-md-end justify-content-start gap-2">
+        <button class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-pencil-square"></i> Editar
+        </button>
+        <button class="btn btn-outline-danger btn-sm">
+          <i class="bi bi-trash3"></i> Deletar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}
+{{else}}
+<!-- Sem tarefas -->
+<div class="row" id="no_tasks">
+  <div class="col text-center">
+    <span class="opacity-75">Não existem tarefas para apresentar</span>
+  </div>
+</div>
+{{/if}}
+
+<!-- Total de tarefas -->
+<div class="row">
+  <div class="col">
+    <p>Tarefas: <span class="text-info">{{tarefas.length}}</span></p>
+  </div>
+</div>
+
+<!-- Rodapé -->
+<div class="row mt-3">
+  <div class="col text-center">
+    <hr />
+    <p>Lista de Tarefas &copy; 2025</p>
+  </div>
+</div>
