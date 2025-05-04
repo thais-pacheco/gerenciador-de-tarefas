@@ -11,6 +11,12 @@
       <input type="password" name="senha" required />
     </div>
 
+    {{#if erro}}
+    <div class="alert alert-danger">
+      {{erro}}
+    </div>
+    {{/if}}
+
     <button type="submit">Entrar</button>
     <p class="link">Ainda não tem conta? <a href="/cadastrar">Cadastre-se</a></p>
   </form>

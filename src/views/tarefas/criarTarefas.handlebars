@@ -1,24 +1,53 @@
-<h3>Criar tarefa</h3>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+        <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Criar Tarefa</h4>
+      </div>
+      <div class="card-body">
+        <form action="/tarefas/send" method="POST">
+          <div class="mb-3">
+            <label for="nome" class="form-label">Nome da Tarefa</label>
+            <input
+              type="text"
+              name="nome"
+              id="nome"
+              class="form-control"
+              maxlength="100"
+              placeholder="Digite o nome da tarefa"
+              required
+              value="{{nome}}"
+            >
+          </div>
 
-<form action="/tarefas/send" method="POST">
-    <div class="mb-3">
-        <input type="text" name="nome" class="form-control" maxlength="100" placeholder="Nome da tarefa" required
-            value="{{nome}}">
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea
+              name="descricao"
+              id="descricao"
+              class="form-control"
+              maxlength="255"
+              placeholder="Adicione uma descrição opcional">{{descricao}}</textarea>
+          </div>
+
+          <input type="hidden" name="usuario_id" value="{{userId}}">
+
+          <div class="d-flex justify-content-between mt-4">
+            <a href="/tarefas" class="btn btn-outline-secondary">
+              <i class="bi bi-arrow-left-circle"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-circle"></i> Criar
+            </button>
+          </div>
+
+          {{#if erro}}
+          <div class="alert alert-danger mt-3 text-center">
+            {{erro}}
+          </div>
+          {{/if}}
+        </form>
+      </div>
     </div>
-
-    <div class="mb-3">
-        <textarea name="descricao" class="form-control" maxlength="255"
-            placeholder="Descrição da tarefa">{{descricao}}</textarea>
-    </div>
-
-    <div class="text-center">
-        <a href="/tarefas" class="btn btn-secondary">Cancelar</a>
-        <button type="submit" class="btn btn-primary">Criar</button>
-    </div>
-
-    <input type="hidden" name="usuario_id" value="{{userId}}">
-</form>
-
-{{#if erro}}
-<div class="alert alert-danger mt-3">{{erro}}</div>
-{{/if}}
+  </div>
+</div>

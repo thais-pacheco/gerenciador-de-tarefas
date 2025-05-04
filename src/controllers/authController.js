@@ -7,15 +7,25 @@ const cadastrarUsuario = async (req, res) => {
 
   try {
     const existe = await Usuario.findOne({ where: { email } });
-    if (existe) return res.status(400).json({ erro: 'Email já cadastrado' });
+    if (existe) {
+      return res.render('auth/cadastro', {
+        layout: 'auth',
+        erro: 'Email já cadastrado',
+        nome,
+        email
+      });
+    }
 
     const senhaHash = await bcrypt.hash(senha, 10);
-    const novoUsuario = await Usuario.create({ nome, email, senha: senhaHash });
+    await Usuario.create({ nome, email, senha: senhaHash });
 
-    // Redireciona para a página de login após cadastro
     res.redirect('/login');
   } catch (error) {
-    res.status(500).json({ erro: 'Erro ao cadastrar usuário', detalhes: error.message });
+    res.render('auth/cadastro', {
+      layout: 'auth',
+      erro: 'Erro ao cadastrar usuário',
+      detalhes: error.message
+    });
   }
 };
 
@@ -25,18 +35,36 @@ const loginUsuario = async (req, res) => {
 
   try {
     const usuario = await Usuario.findOne({ where: { email } });
-    if (!usuario) return res.status(404).json({ erro: 'Usuário não encontrado' });
+    if (!usuario) {
+      return res.status(404).render('auth/login', {
+        layout: 'auth',
+        title: 'Login',
+        erro: 'Usuário não encontrado',
+        email
+      });
+    }
 
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
-    if (!senhaValida) return res.status(401).json({ erro: 'Senha incorreta' });
+    if (!senhaValida) {
+      return res.status(401).render('auth/login', {
+        layout: 'auth',
+        title: 'Login',
+        erro: 'Senha incorreta',
+        email
+      });
+    }
 
-    // Estabelece a sessão com o usuário logado
     req.session.usuarioId = usuario.id;
     req.session.usuarioNome = usuario.nome;
 
-    res.redirect('/tarefas'); // Redireciona após o login
+    res.redirect('/tarefas');
   } catch (error) {
-    res.status(500).json({ erro: 'Erro no login', detalhes: error.message });
+    res.status(500).render('auth/login', {
+      layout: 'auth',
+      title: 'Login',
+      erro: 'Erro no login',
+      detalhes: error.message
+    });
   }
 };
 

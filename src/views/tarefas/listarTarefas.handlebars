@@ -1,25 +1,82 @@
-<!-- Cabeçalho -->
-<div class="row align-items-center mb-4">
-  <div class="col-12 col-md-6 d-flex align-items-center mb-3 mb-md-0">
-    <img src="/images/logo.png" alt="logo" class="img-fluid me-2" width="48" />
-    <h1 class="h5 mb-0">Lista de Tarefas</h1>
+<div class="d-flex justify-content-between align-items-center mt-4">
+  <div class="d-flex align-items-center gap-2">
+    <img src="/images/logo.png" alt="Logo" style="height: 40px;">
+    <h2 class="fw-bold text-primary mb-0">Minhas Tarefas</h2>
   </div>
-  <div class="col-12 col-md-6 text-md-end">
-    <div class="d-flex flex-column flex-sm-row justify-content-md-end gap-2">
-      <a href="/tarefas/adicionar" class="btn btn-primary d-flex align-items-center justify-content-center">
-        <i class="bi bi-plus me-1"></i> Nova tarefa
-      </a>
-    </div>
+  <div class="d-flex gap-2">
+    <a href="/tarefas/adicionar" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Nova Tarefa
+    </a>
+    <form action="/logout" method="POST">
+      <button class="btn btn-outline-danger">
+        Sair <i class="bi bi-box-arrow-right"></i>
+      </button>
+    </form>
   </div>
-  <hr class="mt-4" />
 </div>
 
-<!-- Modal de Confirmação -->
+<hr class="text-primary">
+
+<form method="get" class="row g-3 mb-4">
+  <div class="col-md-4">
+    <select name="status" class="form-select">
+      <option value="">-- Filtrar por status --</option>
+      {{#each statusList}}
+      <option value="{{this.id}}" {{#if (eq this.id ../statusFiltrado)}}selected{{/if}}>
+        {{this.nome}}
+      </option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-filter"></i> Filtrar
+    </button>
+  </div>
+  <div class="col-auto">
+    <a href="/tarefas" class="btn btn-secondary">
+      <i class="bi bi-x-circle"></i> Limpar Filtro
+    </a>
+  </div>
+</form>
+
+<div id="mensagem-status" style="display: none;" class="alert"></div>
+
+<p class="text-muted">Total de tarefas: <strong>{{total}}</strong></p>
+
+{{#if tarefas.length}}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  {{#each tarefas}}
+  <div class="col" id="tarefa-{{id}}">
+    <div class="card h-100 border- border-{{#if (eq this.status_id 1)}}success{{else if (eq this.status_id 2)}}warning{{else}}secondary{{/if}} shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">{{nome}}</h5>
+        <p class="card-text text-muted">{{descricao}}</p>
+        <span class="badge bg-{{#if (eq this.status_id 1)}}success{{else if (eq this.status_id 2)}}warning{{else}}secondary{{/if}}">
+          {{status.nome}}
+        </span>
+      </div>
+      <div class="card-footer d-flex justify-content-between bg-light">
+        <a href="/tarefas/editar/{{id}}" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-pencil"></i> Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger" onclick="abrirModalConfirmacao({{id}})">
+          <i class="bi bi-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{else}}
+<p class="text-center text-muted mt-5">Nenhuma tarefa encontrada com o filtro selecionado.</p>
+{{/if}}
+
 <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-labelledby="modalConfirmacaoLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalConfirmacaoLabel">Confirmar exclusão</h5>
+        <h5 class="modal-title" id="modalConfirmacaoLabel">Confirmar Exclusão</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body">
@@ -33,59 +90,6 @@
   </div>
 </div>
 
-<!-- Mensagem de status -->
-<div id="mensagem-status" style="display: none;" class="alert alert-success"></div>
-
-<!-- Lista de Tarefas -->
-{{#if tarefas.length}}
-  {{#each tarefas}}
-    <div class="row mb-3" id="tarefa-{{id}}">
-      <div class="col-12 border border-secondary rounded p-3 shadow-sm">
-        <div class="row align-items-center gy-3">
-          <div class="col-12 col-md-7 d-flex align-items-center">
-            <i class="bi bi-arrow-right-circle-fill text-info fs-5 me-2"></i>
-            <h6 class="mb-0">{{descricao}}</h6>
-          </div>
-          <div class="col-12 col-md-3">
-            <span class="badge bg-secondary">{{status.nome}}</span>
-          </div>
-          <div class="col-12 col-md-2 d-flex justify-content-md-end justify-content-start gap-2">
-            <a href="/tarefas/editar/{{id}}" class="btn btn-outline-primary btn-sm">
-              <i class="bi bi-pencil-square"></i> Editar
-            </a>
-            <button class="btn btn-outline-danger btn-sm" onclick="abrirModalConfirmacao({{id}})">
-              <i class="bi bi-trash3"></i> Deletar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  {{/each}}
-{{else}}
-  <!-- Sem tarefas -->
-  <div class="row" id="no_tasks">
-    <div class="col text-center">
-      <span class="opacity-75">Não existem tarefas para apresentar</span>
-    </div>
-  </div>
-{{/if}}
-
-<!-- Total de tarefas -->
-<div class="row">
-  <div class="col">
-    <p>Tarefas: <span class="text-info">{{tarefas.length}}</span></p>
-  </div>
-</div>
-
-<!-- Rodapé -->
-<div class="row mt-3">
-  <div class="col text-center">
-    <hr />
-    <p>Lista de Tarefas &copy; 2025</p>
-  </div>
-</div>
-
-<!-- Scripts -->
 <script>
   let idTarefaParaExcluir = null;
 
@@ -101,38 +105,34 @@
     fetch(`/tarefas/deletar/${idTarefaParaExcluir}`, {
       method: 'DELETE'
     })
-    .then(res => res.json())
-    .then(data => {
-      const msgDiv = document.getElementById("mensagem-status");
+      .then(res => res.json())
+      .then(data => {
+        const msgDiv = document.getElementById("mensagem-status");
 
-      if (data.mensagem) {
-        msgDiv.textContent = data.mensagem;
-        msgDiv.className = "alert alert-success";
+        if (data.mensagem) {
+          msgDiv.textContent = data.mensagem;
+          msgDiv.className = "alert alert-success";
+          msgDiv.style.display = "block";
 
-        // Fecha o modal
+          setTimeout(() => {
+            msgDiv.style.display = "none";
+            location.reload();
+          }, 2000);
+        } else {
+          msgDiv.textContent = data.erro || "Erro ao excluir.";
+          msgDiv.className = "alert alert-danger";
+          msgDiv.style.display = "block";
+        }
+
         const modalEl = document.getElementById('modalConfirmacao');
         bootstrap.Modal.getInstance(modalEl).hide();
         idTarefaParaExcluir = null;
-
-        // Mostra mensagem de sucesso e recarrega a página após um tempo
-        msgDiv.style.display = "block";
-
-        setTimeout(() => {
-          location.reload(); // Recarrega a página para atualizar a contagem
-        }, 1000);
-
-      } else {
-        msgDiv.textContent = data.erro || "Erro ao excluir.";
+      })
+      .catch(() => {
+        const msgDiv = document.getElementById("mensagem-status");
+        msgDiv.textContent = "Erro ao excluir tarefa.";
         msgDiv.className = "alert alert-danger";
         msgDiv.style.display = "block";
-      }
-
-    })
-    .catch(err => {
-      const msgDiv = document.getElementById("mensagem-status");
-      msgDiv.textContent = "Erro ao excluir tarefa.";
-      msgDiv.className = "alert alert-danger";
-      msgDiv.style.display = "block";
-    });
+      });
   });
 </script>

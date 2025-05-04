@@ -11,6 +11,9 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/cadastrar', authController.cadastrarUsuario);
+
 router.post('/login', authController.loginUsuario);
+
+router.post('/logout', authController.logoutUsuario);
 
 module.exports = router;
