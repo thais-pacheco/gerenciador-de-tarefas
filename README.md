@@ -31,4 +31,4 @@ Apenas usuários cadastrados podem acessar e gerenciar suas tarefas, garantindo 
 ---
 
 # 👷 AUTORA
-### **Thais Rodrigues**
+### [**Thais Rodrigues**](https://github.com/thais-pacheco)
